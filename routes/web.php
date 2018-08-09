@@ -19,4 +19,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/push', 'HomeController@push')->name('push');
+Route::get('/push/{comment}', 'HomeController@push')->name('push');

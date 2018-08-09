@@ -18,17 +18,16 @@ class NotifyComment implements ShouldBroadcast
 
     public $message;
 
-    public $mollah;
-
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user, $comment)
     {
-        $this->username = $user;
-        $this->message  = "{$user->name} liked your status";
+        //dd($comment); die();
+         $this->username = $user;
+         $this->message  = $comment;
     }
 
     /**

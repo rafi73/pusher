@@ -15,6 +15,7 @@
                     @endif
 
                     You are logged in!
+                    <input type="text" id="txtComment">
                     <a id="pusher" class="btn btn-xs btn-info pull-right">Push</a>
                 </div>
             </div>
@@ -26,9 +27,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
+        console.log(123)
         $("#pusher").click(function(){
+            console.log($('#txtComment').val())
             $.ajax({
-                url: "/push",
+                url: `/push/${$('#txtComment').val()}`,
                 type: 'GET',
                 error: function (xhr, ajaxOptions, thrownError) {
                     alert(xhr.status);

@@ -32,9 +32,9 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function push()
+    public function push($comment)
     {
-        event(new \App\Events\NotifyComment(Auth::user()));
+        event(new \App\Events\NotifyComment(Auth::user(), $comment));
         //return view('home');
     }
 }

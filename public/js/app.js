@@ -14018,9 +14018,26 @@ Vue.component('notification', __webpack_require__(42));
 
 var app = new Vue({
     el: '#app',
+    data: {
+        notifications: ''
+    },
     mounted: function mounted() {
-        Echo.channel('comment').listen('NotifyComment', function (e) {
-            console.log(e);
+        var _this = this;
+
+        // Echo.channel('comment')
+        // .listen('NotifyComment', (e) => {
+        //     console.log(e)
+        // });
+
+        axios.post('/notification/get').then(function (response) {
+            _this.notifications = response.data;
+        });
+
+        var userId = $('meta[name="userId"]').attr('content');
+        console.log(userId);
+        Echo.private('App.User.' + userId).notification(function (notification) {
+            console.log(notification);
+            _this.notifications.push(notification);
         });
     }
 });
@@ -14044,9 +14061,9 @@ window.Popper = __webpack_require__(3).default;
  */
 
 try {
-    window.$ = window.jQuery = __webpack_require__(4);
+  window.$ = window.jQuery = __webpack_require__(4);
 
-    __webpack_require__(17);
+  __webpack_require__(17);
 } catch (e) {}
 
 /**
@@ -14068,9 +14085,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 /**
@@ -14084,10 +14101,10 @@ if (token) {
 window.Pusher = __webpack_require__(38);
 
 window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo___default.a({
-    broadcaster: 'pusher',
-    key: "3e81920e07600e4debfd",
-    cluster: "ap1",
-    encrypted: true
+  broadcaster: 'pusher',
+  key: "3e81920e07600e4debfd",
+  cluster: "ap1",
+  encrypted: true
 });
 
 /***/ }),
@@ -52477,8 +52494,6 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__NotificationItem_vue__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__NotificationItem_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__NotificationItem_vue__);
 //
 //
 //
@@ -52494,141 +52509,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['unreads', 'userid'],
-    components: { NotificationItem: __WEBPACK_IMPORTED_MODULE_0__NotificationItem_vue___default.a },
-    data: function data() {
-        return {
-            unreadNotifications: this.unreads
-        };
-    },
-
+    props: ['notifications'],
     methods: {
-        markNotificationAsRead: function markNotificationAsRead() {
-            if (this.unreadNotifications.length) {
-                axios.get('/markAsRead');
-            }
+        MarkAsRead: function MarkAsRead(notification) {
+            var data = {
+                id: notification.id
+            };
+            axios.post('/notification/read', data).then(function (response) {
+                window.location.href = "/post/" + notification.data.post.id;
+            });
         }
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        console.log('Component mounted.');
-        Echo.private('App.User.' + this.userid).notification(function (notification) {
-            console.log(notification);
-            var newUnreadNotifications = { data: { thread: notification.thread, user: notification.user } };
-            _this.unreadNotifications.push(newUnreadNotifications);
-        });
     }
 });
 
 /***/ }),
-/* 44 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(11)
-/* script */
-var __vue_script__ = __webpack_require__(45)
-/* template */
-var __vue_template__ = __webpack_require__(46)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\NotificationItem.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-4b1f39d6", Component.options)
-  } else {
-    hotAPI.reload("data-v-4b1f39d6", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 45 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['unread'],
-    data: function data() {
-        return {
-            threadUrl: ""
-        };
-    },
-    mounted: function mounted() {
-        this.threadUrl = "thread/" + this.unread.data.thread.id;
-    }
-});
-
-/***/ }),
-/* 46 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wrap" }, [
-    _c("a", { attrs: { href: _vm.threadUrl } }, [
-      _vm._v(
-        "\n        " +
-          _vm._s(_vm.unread.data.user.name) +
-          " commented on " +
-          _vm._s(_vm.unread.data.thread.subject) +
-          "\n    "
-      )
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-4b1f39d6", module.exports)
-  }
-}
-
-/***/ }),
+/* 44 */,
+/* 45 */,
+/* 46 */,
 /* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -52636,43 +52540,64 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "li",
-    { staticClass: "dropdown", on: { click: _vm.markNotificationAsRead } },
-    [
-      _c(
-        "a",
-        {
-          staticClass: "dropdown-toggle",
-          attrs: {
-            href: "#",
-            "data-toggle": "dropdown",
-            role: "button",
-            "aria-expanded": "false"
-          }
-        },
-        [
-          _c("span", { staticClass: "glyphicon glyphicon-globe" }),
-          _vm._v(" Notifications "),
-          _c("span", { staticClass: "badge alert-danger" }, [
-            _vm._v(_vm._s(_vm.unreadNotifications.length))
+  return _c("li", { staticClass: "dropdown" }, [
+    _c(
+      "a",
+      {
+        staticClass: "dropdown-toggle",
+        attrs: {
+          href: "#",
+          "data-toggle": "dropdown",
+          role: "button",
+          "aria-expanded": "false"
+        }
+      },
+      [
+        _c("span", { staticClass: "glyphicon glyphicon-globe" }),
+        _vm._v("\n        Notifications "),
+        _c("span", { staticClass: "badge" }, [
+          _vm._v(_vm._s(_vm.notifications.length))
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "caret" })
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "ul",
+      { staticClass: "dropdown-menu", attrs: { role: "menu" } },
+      [
+        _vm._l(_vm.notifications, function(notification, index) {
+          return _c("li", { key: index }, [
+            _c(
+              "a",
+              {
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    _vm.MarkAsRead(notification)
+                  }
+                }
+              },
+              [
+                _vm._v("\n                SomeOne commented on your Post"),
+                _c("br"),
+                _vm._v(" "),
+                _c("small", [_vm._v(_vm._s(notification.data.post.title))])
+              ]
+            )
           ])
-        ]
-      ),
-      _vm._v(" "),
-      _c("ul", { staticClass: "dropdown-menu", attrs: { role: "menu" } }, [
-        _c(
-          "li",
-          _vm._l(_vm.unreadNotifications, function(unread) {
-            return _c("notification-item", {
-              key: unread.id,
-              attrs: { unread: unread }
-            })
-          })
-        )
-      ])
-    ]
-  )
+        }),
+        _vm._v(" "),
+        _vm.notifications.length == 0
+          ? _c("li", [
+              _vm._v("\n            There is no new notifications\n        ")
+            ])
+          : _vm._e()
+      ],
+      2
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

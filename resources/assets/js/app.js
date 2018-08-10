@@ -21,10 +21,24 @@ Vue.component('notification', require('./components/Notification.vue'));
 
 const app = new Vue({
     el: '#app',
+    data: {
+        notifications: ''
+    },
     mounted() {
-        Echo.channel('comment')
-        .listen('NotifyComment', (e) => {
-            console.log(e)
+        // Echo.channel('comment')
+        // .listen('NotifyComment', (e) => {
+        //     console.log(e)
+        // });
+
+        axios.post('/notification/get').then(response => {
+            this.notifications = response.data;
+        });
+
+        var userId = $('meta[name="userId"]').attr('content');
+        console.log(userId)
+        Echo.private('App.User.' + userId).notification((notification) => {
+            console.log(notification)
+            this.notifications.push(notification);
         });
     }
 });

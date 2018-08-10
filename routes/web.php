@@ -20,3 +20,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/push/{comment}', 'HomeController@push')->name('push');
+
+Route::post('/notification/get', 'NotificationController@get');
+Route::post('/notification/read', 'NotificationController@read');
